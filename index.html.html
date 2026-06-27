@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Feliz Cumpleaños Papá Amílcar! ✨ 44 Años</title>
+    <!-- GSAP & Plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Montserrat:wght@300;400;600&family=Pinyon+Script&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --gold: #dfb76c;
+            --gold-light: #f3e5ab;
+            --luxury-black: #0a0a0c;
+            --wine: #800020;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--luxury-black);
+            font-family: 'Montserrat', sans-serif;
+            color: #ffffff;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        #custom-cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            position: fixed;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 10000;
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        #custom-cursor-dot {
+            width: 4px;
+            height: 4px;
+            background-color: var(--gold-light);
+            border-radius: 50%;
+            position: fixed;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+        /* Cinematic Intro Overlay */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .intro-text-container {
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .intro-phrase {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            color: #fff;
+            letter-spacing: 3px;
+            position: absolute;
+            opacity: 0;
+            width: 90%;
+            max-width: 800px;
+        }
+
+        .start-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 15px 40px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+            box-shadow: 0 0 15px rgba(223, 183, 108, 0.1);
+        }
+
+        .start-btn:hover {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 25px rgba(223, 183, 108, 0.4);
+        }
+
+        /* Main Master Canvas Background */
+        #master-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Scenery & Background Gradient Control */
+        .sky-gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(to bottom, #020107 0%, #050514 50%, #110924 100%);
+            z-index: 0;
+        }
+
+        /* Ambient Sound Audio Player Controls */
+        .audio-controller {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            z-index: 500;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .audio-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+        .audio-btn:hover { color: var(--gold); }
+
+        /* Floating Interactive Toasts */
+        .interactive-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(10, 10, 12, 0.9);
+            border: 1px solid var(--gold);
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            z-index: 2000;
+            pointer-events: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        /* Main Scroll Container layout */
+        main {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
+
+        section {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 80px 20px;
+            box-sizing: border-box;
+        }
+
+        .section-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            transform: translateY(40px);
+            opacity: 0;
+            transition: all 1s cubic-bezier(0.215, 0.610, 0.355, 1);
+        }
+
+        .section-card.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Titles & Typography */
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 4px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.2);
+            margin-bottom: 10px;
+        }
+
+        .gold-glow-text {
+            color: var(--gold);
+            text-shadow: 0 0 15px rgba(223,183,108,0.5);
+        }
+
+        .hero-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            letter-spacing: 8px;
+            color: #ccc;
+            margin-top: 15px;
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2.2rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .section-body {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #e0e0e0;
+            font-weight: 300;
+        }
+
+        /* Interactive Vector Machinery / Vehicles Section Track */
+        .highway-track {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(transparent, rgba(10,10,12,0.8));
+            border-bottom: 4px dashed rgba(255,255,255,0.1);
+            overflow: hidden;
+            pointer-events: auto;
+        }
+
+        .machinery-wrapper {
+            position: absolute;
+            bottom: 10px;
+            left: -300px;
+            display: flex;
+            align-items: flex-end;
+            gap: 50px;
+            cursor: pointer;
+        }
+
+        .vehicle-container {
+            position: relative;
+            transition: transform 0.2s;
+        }
+        .vehicle-container:hover {
+            transform: scale(1.05);
+        }
+
+        /* Interactive Envelope & Letter system */
+        .envelope-container {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            margin: 40px auto;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+
+        .envelope {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f2ebd9;
+            border-radius: 6px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-top: 110px solid #e3dac5;
+            transform-origin: top center;
+            z-index: 3;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .envelope-flap.open {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .envelope-seal {
+            position: absolute;
+            top: 90px;
+            left: 140px;
+            width: 40px;
+            height: 40px;
+            background: var(--wine);
+            border-radius: 50%;
+            z-index: 4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            color: #fff;
+            font-size: 0.8rem;
+            transition: transform 0.4s;
+        }
+        .envelope-seal.broken {
+            transform: scale(0) rotate(45deg);
+        }
+
+        .letter-paper {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            width: 290px;
+            height: 190px;
+            background: #fffdf7;
+            padding: 25px;
+            box-sizing: border-box;
+            border-radius: 4px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+            z-index: 2;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), cubic-bezier(0.25, 1, 0.5, 1) opacity;
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        .letter-paper.extracted {
+            transform: translateY(-220px) scale(1.3);
+            z-index: 100;
+            height: auto;
+            max-height: 400px;
+            opacity: 1;
+            overflow-y: auto;
+            border: 1px solid var(--gold);
+        }
+
+        .letter-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            color: #333;
+            line-height: 1.5;
+            text-align: left;
+        }
+        .letter-paper.extracted .letter-text {
+            font-size: 0.85rem;
+        }
+
+        .letter-signature {
+            font-family: 'Pinyon Script', cursive;
+            font-size: 1.8rem;
+            color: var(--wine);
+            text-align: right;
+            margin-top: 15px;
+        }
+
+        .close-letter-btn {
+            display: none;
+            margin: 15px auto 0 auto;
+            background: var(--wine);
+            color: #fff;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            letter-spacing: 1px;
+        }
+
+        /* Real Interactive Birthday Cake System */
+        .cake-wrapper {
+            margin: 40px auto;
+            width: 200px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .cake-svg-container {
+            width: 100%;
+            transition: transform 0.5s;
+        }
+        .cake-wrapper:hover .cake-svg-container {
+            transform: rotate(3deg) scale(1.05);
+        }
+
+        .candle-flame {
+            animation: flicker 0.6s infinite alternate;
+            transform-origin: center bottom;
+        }
+
+        @keyframes flicker {
+            0% { transform: scaleX(0.9) rotate(-2deg); filter: drop-shadow(0 0 4px #ffaa00); }
+            100% { transform: scaleX(1.1) rotate(3deg) scaleY(1.2); filter: drop-shadow(0 0 12px #ff5500); }
+        }
+
+        .cake-btn {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            letter-spacing: 2px;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 25px;
+            box-shadow: 0 5px 15px rgba(223,183,108,0.3);
+            transition: all 0.3s;
+        }
+        .cake-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(223,183,108,0.5);
+        }
+
+        /* Final Masterpiece Section Credit Scroll styling */
+        .final-letter-card {
+            background: linear-gradient(135deg, rgba(20,15,35,0.7) 0%, rgba(5,5,10,0.9) 100%);
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 50px rgba(223, 183, 108, 0.15);
+            max-width: 750px;
+        }
+
+        .final-letter-p {
+            font-size: 1.2rem;
+            line-height: 2;
+            font-weight: 300;
+            margin-bottom: 15px;
+            color: #f5f5f7;
+            text-align: center;
+        }
+
+        /* Responsive Mobile Architecture */
+        @media (max-width: 768px) {
+            body { cursor: auto; }
+            #custom-cursor, #custom-cursor-dot { display: none; }
+            .hero-title { font-size: 2.2rem; }
+            .section-title { font-size: 1.6rem; }
+            .hero-subtitle { font-size: 1rem; letter-spacing: 4px; }
+            .intro-phrase { font-size: 1.2rem; }
+            .letter-paper.extracted {
+                transform: translateY(-200px) scale(1.05);
+                width: 280px;
+                left: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Audio Player Infrastructure -->
+    <div class="audio-controller">
+        <button class="audio-btn" id="play-pause-btn" title="Reproducir/Pausar">▶</button>
+        <button class="audio-btn" id="mute-btn" title="Silenciar">🔊</button>
+        <button class="audio-btn" id="loop-btn" title="Bucle">🔁</button>
+    </div>
+
+    <div id="custom-cursor"></div>
+    <div id="custom-cursor-dot"></div>
+
+    <!-- Interactive Toast Alerts -->
+    <div class="interactive-toast" id="toast-layer">✨ ¡Has despertado un destello mágico en el campo!</div>
+
+    <!-- Cinematic Overlay Introduction -->
+    <div id="intro-overlay">
+        <div class="intro-text-container">
+            <div class="intro-phrase" id="phrase-1">Hay hombres que construyen caminos...</div>
+            <div class="intro-phrase" id="phrase-2">Hay hombres que construyen grandes obras...</div>
+            <div class="intro-phrase" id="phrase-3">Pero solo algunos construyen una familia llena de amor.</div>
+        </div>
+        <button class="start-btn" id="unveil-btn">INGRESAR A LA EXPERIENCIA</button>
+    </div>
+
+    <!-- Background Scenery Layering -->
+    <div class="sky-gradient-bg"></div>
+    <canvas id="master-canvas"></canvas>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section id="hero-cinematic">
+            <div style="text-align: center; z-index: 10; pointer-events: none;">
+                <h1 class="hero-title">✨ FELIZ CUMPLEAÑOS PAPÁ AMÍLCAR ✨</h1>
+                <div class="hero-subtitle"><span class="gold-glow-text">44 AÑOS</span> &bull; 27 DE JUNIO</div>
+                <p style="margin-top: 20px; font-weight: 300; letter-spacing: 2px; color: rgba(255,255,255,0.6);">Hecho con muchísimo amor por ❤️ Su hija Carolay</p>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: NUESTRO CAMINO & ENSEÑANZAS -->
+        <section id="enseñanzas">
+            <div class="section-card">
+                <h2 class="section-title">Las enseñanzas de papá</h2>
+                <p class="section-body">
+                    Desde las mañanas frías en el campo hasta el rugido de los motores que marcan el inicio de una jornada de construcción, me enseñaste que las obras duraderas no se hacen solo con cemento y hierro, sino con integridad, fuerza y un corazón inquebrantable. Tu esfuerzo es el motor de nuestro destino.
+                </p>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: INTERACTIVA - EL SOBRE DE CAROLAY -->
+        <section id="carta-interactiva">
+            <div class="section-card" style="pointer-events: auto;">
+                <h2 class="section-title">Un Mensaje Desde el Corazón</h2>
+                <p style="font-size:0.9rem; color: #bbb; margin-bottom: 20px;">(Haz clic en el sello de cera dorado para abrir el sobre)</p>
+                
+                <div class="envelope-container" id="interactive-envelope-box">
+                    <div class="envelope-flap" id="env-flap"></div>
+                    <div class="envelope-seal" id="env-seal">❤️</div>
+                    <div class="envelope"></div>
+                    
+                    <div class="letter-paper" id="env-letter">
+                        <div class="letter-text">
+                            <p style="margin-bottom:10px; font-weight: bold; color:#111;">Querido Papá Amílcar,</p>
+                            <p style="color:#333; margin-bottom:8px;">Hoy que cumples 44 años, quiero recordarte lo inmenso que eres para mí. Te veo trabajar duro, domar esos gigantescos camiones y tractores, y transformar la tierra con orgullo, pero lo que más admiro es cómo construiste este hogar con absoluta ternura.</p>
+                            <p style="color:#333;">Gracias por cada camino que nos abriste, por cada sacrificio silencioso y por ser mi héroe invencible. ¡Feliz día!</p>
+                            <div class="letter-signature">Carolay</div>
+                            <button class="close-letter-btn" id="close-letter-node">Guardar Carta</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: VEHÍCULOS E INTERACCIÓN DE MAQUINARIA -->
+        <section id="maquinaria-campo">
+            <div class="section-card">
+                <h2 class="section-title">44 Años Dejando Huellas</h2>
+                <p class="section-body">
+                    El rugido de los motores y la tierra labrada son testigos de tu incansable labor. Haz clic directamente sobre los vehículos que avanzan abajo para activar sus motores, luces y bocinas de trabajo. Cada paso tuyo edifica nuestro futuro.
+                </p>
+            </div>
+
+            <!-- Vector Vehicles Tracks (SVG Embedded for High Definition Quality Rendering) -->
+            <div class="highway-track">
+                <div class="machinery-wrapper" id="fleet-fleet">
+                    <!-- Tractor SVG -->
+                    <div class="vehicle-container" id="tractor-unit" title="¡Clic para encender tractor!">
+                        <svg width="110" height="90" viewBox="0 0 120 100">
+                            <rect x="20" y="40" width="50" height="30" fill="#2e7d32" rx="4"/>
+                            <rect x="45" y="15" width="25" height="30" fill="#e0e0e0" rx="2"/>
+                            <rect x="5" y="48" width="20" height="15" fill="#1b5e20"/>
+                            <line x1="35" y1="15" x2="35" y2="40" stroke="#333" stroke-width="4"/>
+                            <circle class="wheel" cx="30" cy="75" r="16" fill="#111" stroke="#fff" stroke-width="2"/>
+                            <circle class="wheel" cx="85" cy="70" r="22" fill="#111" stroke="#fff" stroke-width="2"/>
+                            <polygon points="10,65 25,65 20,55 5,55" fill="#ffd54f"/>
+                            <circle id="tractor-light" cx="3" cy="52" r="4" fill="#555"/>
+                        </svg>
+                    </div>
+                    <!-- Heavy Construction Truck SVG -->
+                    <div class="vehicle-container" id="truck-unit" title="¡Clic para tocar bocina!">
+                        <svg width="150" height="90" viewBox="0 0 160 100">
+                            <rect x="10" y="35" width="90" height="35" fill="#f57c00" rx="2"/>
+                            <polygon points="100,70 145,70 140,30 100,30" fill="#eeeeee"/>
+                            <rect x="100" y="45" width="48" height="25" fill="#ff9800" rx="3"/>
+                            <circle class="wheel" cx="35" cy="75" r="14" fill="#222"/>
+                            <circle class="wheel" cx="70" cy="75" r="14" fill="#222"/>
+                            <circle class="wheel" cx="125" cy="75" r="14" fill="#222"/>
+                            <circle id="truck-light" cx="156" cy="55" r="5" fill="#555"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: PASTEL DE CUMPLEAÑOS -->
+        <section id="pastel-celebracion">
+            <div class="section-card" style="pointer-events: auto;">
+                <h2 class="section-title">El Momento del Deseo</h2>
+                <p class="section-body">Pide un deseo con el corazón, Papá. Tu esfuerzo merece la recompensa del universo entero.</p>
+                
+                <div class="cake-wrapper" id="master-cake-box">
+                    <div class="cake-svg-container">
+                        <svg width="220" height="220" viewBox="0 0 200 200">
+                            <!-- Cake Base Stand -->
+                            <ellipse cx="100" cy="160" rx="80" ry="15" fill="#e0e0e0"/>
+                            <rect x="85" y="160" width="30" height="15" fill="#b0bec5"/>
+                            <!-- Layer 1 -->
+                            <rect x="35" y="100" width="130" height="50" fill="#6d4c41" rx="8"/>
+                            <ellipse cx="100" cy="100" rx="65" ry="10" fill="#8d6e63"/>
+                            <path d="M35,110 Q50,125 65,110 T95,110 T125,110 T165,110" fill="none" stroke="#fff" stroke-width="6"/>
+                            <!-- Candles -->
+                            <rect x="80" y="65" width="6" height="30" fill="#ffb74d"/>
+                            <polygon class="candle-flame" points="83,50 87,58 83,63 79,58" fill="#ff5722"/>
+                            <rect x="115" y="65" width="6" height="30" fill="#ffb74d"/>
+                            <polygon class="candle-flame" points="118,50 122,58 118,63 114,58" fill="#ff5722"/>
+                        </svg>
+                    </div>
+                    <button class="cake-btn" id="blow-candles-trigger">🎂 SOPLAR LAS VELAS</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FINAL CINEMÁTICO OPUS -->
+        <section id="masterpiece-credits">
+            <div class="section-card final-letter-card">
+                <h2 class="section-title" style="font-size:2.5rem; margin-bottom:30px;">Siempre serás mi héroe</h2>
+                <div class="final-letter-p" style="color: var(--gold); font-weight:bold; font-family:'Cinzel';">Papá:</div>
+                <div class="final-letter-p">No existe un regalo capaz de expresar todo el amor y el agradecimiento que siento por ti. Por eso hice esta página con todo mi corazón.</div>
+                <div class="final-letter-p">Gracias por cada sacrificio. Gracias por cada consejo. Gracias por cada abrazo. Gracias por enseñarme a nunca rendirme.</div>
+                <div class="final-letter-p">Gracias por ser el mejor papá que Dios pudo regalarme. Espero que este pequeño detalle te recuerde cuánto te amo y lo orgullosa que estoy de ser tu hija.</div>
+                <div class="final-letter-p" style="margin-top:30px; font-weight:400; color:var(--gold-light);">Que Dios te bendiga hoy y siempre. Feliz cumpleaños.</div>
+                <div class="final-letter-p" style="font-family:'Pinyon Script'; font-size:3rem; color:var(--gold); margin-top:20px;">Con todo mi amor, Carolay</div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- AUDIO ARCHITECTURE FRAMEWORK ---
+        // Se autoconfigura con un sintetizador de audio nativo (Web Audio API) para garantizar música emotiva de fondo inmediata libre de copyright.
+        // Puedes reemplazar la URL de la variable 'EXTERNAL_MP3_URL' con cualquier canción (ej. Morat).
+        const EXTERNAL_MP3_URL = ""; 
+        let audioCtx, mainOscillator, mainGainNode, bgAudioElement;
+        let isPlaying = false;
+
+        function initializeAudioSystem() {
+            if (audioCtx || bgAudioElement) return;
+            
+            if (EXTERNAL_MP3_URL !== "") {
+                bgAudioElement = new Audio(EXTERNAL_MP3_URL);
+                bgAudioElement.loop = true;
+                bgAudioElement.volume = 0.6;
+            } else {
+                // Generador armónico cinemático nativo (Modo Ambiental Emotivo)
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                mainGainNode = audioCtx.createGain();
+                mainGainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                mainGainNode.connect(audioCtx.destination);
+                
+                setInterval(() => {
+                    if(!isPlaying) return;
+                    let chords = [196.00, 220.00, 261.63, 293.66, 329.63, 392.00];
+                    let note = chords[Math.floor(Math.random() * chords.length)];
+                    let osc = audioCtx.createOscillator();
+                    let gain = audioCtx.createGain();
+                    
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(note, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 4);
+                    
+                    osc.connect(gain);
+                    gain.connect(mainGainNode);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 4);
+                }, 1200);
+            }
+        }
+
+        function toggleAudioPlay(forceState = null) {
+            isPlaying = (forceState !== null) ? forceState : !isPlaying;
+            document.getElementById('play-pause-btn').innerText = isPlaying ? "⏸" : "▶";
+            
+            if (bgAudioElement) {
+                isPlaying ? bgAudioElement.play() : bgAudioElement.pause();
+            } else if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        document.getElementById('play-pause-btn').addEventListener('click', () => toggleAudioPlay());
+        document.getElementById('mute-btn').addEventListener('click', function() {
+            if(bgAudioElement) {
+                bgAudioElement.muted = !bgAudioElement.muted;
+                this.innerText = bgAudioElement.muted ? "🔇" : "🔊";
+            } else if(mainGainNode) {
+                let currentVol = mainGainNode.gain.value;
+                mainGainNode.gain.setValueAtTime(currentVol > 0 ? 0 : 0.05, audioCtx.currentTime);
+                this.innerText = currentVol > 0 ? "🔇" : "🔊";
+            }
+        });
+
+        // --- HIGH LEVEL INTRO CINEMATIC GSAP TIMELINE ---
+        window.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(TextPlugin);
+            const tl = gsap.timeline();
+            
+            tl.to("#phrase-1", { opacity: 1, duration: 1.5, yoyo: true, hold: 1.5, repeat: 1, ease: "power2.inOut" })
+              .to("#phrase-2", { opacity: 1, duration: 1.5, yoyo: true, hold: 1.5, repeat: 1, ease: "power2.inOut" })
+              .to("#phrase-3", { opacity: 1, duration: 1.8, yoyo: true, hold: 2.0, repeat: 1, ease: "power2.inOut" })
+              .to("#unveil-btn", { opacity: 1, y: 0, duration: 1, ease: "back.out(1.7)" });
+        });
+
+        document.getElementById('unveil-btn').addEventListener('click', () => {
+            initializeAudioSystem();
+            toggleAudioPlay(true);
+            
+            gsap.to("#intro-overlay", { 
+                opacity: 0, 
+                duration: 1.5, 
+                ease: "power3.inOut", 
+                onComplete: () => {
+                    document.getElementById('intro-overlay').style.display = 'none';
+                    triggerEpicCelebrationFireworks();
+                }
+            });
+            
+            // Animación de entrada de los elementos principales del título
+            gsap.from("#hero-cinematic h1", { scale: 0.8, opacity: 0, duration: 2, ease: "power4.out" });
+            gsap.from(".hero-subtitle", { opacity: 0, y: 30, duration: 1.5, delay: 0.5 });
+        });
+
+        // --- INTERACTIVE MOUSE CUSTOM CURSOR ---
+        const cursor = document.getElementById('custom-cursor');
+        const dot = document.getElementById('custom-cursor-dot');
+        
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+            gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0.02 });
+        });
+
+        document.querySelectorAll('button, .vehicle-container, .envelope-container').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                cursor.style.width = '40px'; cursor.style.height = '40px'; cursor.style.backgroundColor = 'rgba(223,183,108,0.1)';
+            });
+            item.addEventListener('mouseleave', () => {
+                cursor.style.width = '20px'; cursor.style.height = '20px'; cursor.style.backgroundColor = 'transparent';
+            });
+        });
+
+        // --- MASTER CANVAS ENGINE (FIREWORKS, STARS, FIREFLIES) ---
+        const canvas = document.getElementById('master-canvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray = [];
+        let firefliesArray = [];
+        let fireworksArray = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Firefly {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height * 0.7;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.speedY = Math.random() * 0.4 - 0.2;
+                this.angle = Math.random() * Math.PI * 2;
+            }
+            update() {
+                this.angle += 0.02;
+                this.x += this.speedX + Math.sin(this.angle) * 0.2;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height * 0.8) this.speedY *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(243, 229, 171, ${0.3 + Math.abs(Math.sin(this.angle)) * 0.7})`;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = "#dfb76c";
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        class FireworkParticle {
+            constructor(x, y, color) {
+                this.x = x; this.y = y; this.color = color;
+                this.radius = Math.random() * 2 + 1;
+                this.angle = Math.random() * Math.PI * 2;
+                this.velocity = Math.random() * 4 + 2;
+                this.dx = Math.cos(this.angle) * this.velocity;
+                this.dy = Math.sin(this.angle) * this.velocity;
+                this.alpha = 1;
+                this.gravity = 0.04;
+            }
+            update() {
+                this.dy += this.gravity;
+                this.x += this.dx;
+                this.y += this.dy;
+                this.alpha -= 0.015;
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 6;
+                ctx.shadowColor = this.color;
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function createExplosion(x, y) {
+            let colors = ['#dfb76c', '#ffd54f', '#ff5722', '#ffeb3b', '#e040fb', '#00e5ff'];
+            let chosenColor = colors[Math.floor(Math.random() * colors.length)];
+            for (let i = 0; i < 60; i++) {
+                fireworksArray.push(new FireworkParticle(x, y, chosenColor));
+            }
+        }
+
+        // Initialize Environment Ecosystem
+        for(let i=0; i<45; i++) { firefliesArray.push(new Firefly()); }
+
+        function runMasterCanvasLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw static field stars background
+            ctx.fillStyle = "rgba(255,255,255,0.15)";
+            for(let i=0; i<30; i++) {
+                let sX = (Math.sin(i)*84322) % canvas.width;
+                let sY = (Math.cos(i)*29432) % (canvas.height*0.5);
+                ctx.fillRect(sX, sY, 1.5, 1.5);
+            }
+
+            firefliesArray.forEach(f => { f.update(); f.draw(); });
+            
+            fireworksArray.forEach((fw, idx) => {
+                fw.update();
+                fw.draw();
+                if(fw.alpha <= 0) fireworksArray.splice(idx, 1);
+            });
+
+            requestAnimationFrame(runMasterCanvasLoop);
+        }
+        runMasterCanvasLoop();
+
+        function triggerEpicCelebrationFireworks() {
+            for(let i=0; i<5; i++) {
+                setTimeout(() => {
+                    createExplosion(Math.random() * canvas.width, Math.random() * canvas.height * 0.5);
+                }, i * 400);
+            }
+        }
+
+        // --- INTERACTIVE INTERACTION TOAST ENGINE ---
+        const toast = document.getElementById('toast-layer');
+        function showToast(message) {
+            toast.innerText = message;
+            gsap.to(toast, { transform: "translateX(-50%) translateY(0px)", opacity: 1, duration: 0.5 });
+            setTimeout(() => {
+                gsap.to(toast, { transform: "translateX(-50%) translateY(100px)", opacity: 0, duration: 0.5 });
+            }, 3500);
+        }
+
+        // Global Dynamic Click Interactions
+        document.addEventListener('click', (e) => {
+            if(e.target.tagName === 'MAIN' || e.target.tagName === 'SECTION') {
+                createExplosion(e.clientX, e.clientY);
+                let randomPhrases = [
+                    "¡Trabajo de valor!", "✨ Te amamos papá", "44 años construyendo historias", "❤️ Eres nuestro gran orgullo", "🚜 Fuerza y honor todos los días"
+                ];
+                showToast(randomPhrases[Math.floor(Math.random() * randomPhrases.length)]);
+            }
+        });
+
+        // --- ENVELOPE AND INTERACTIVE LETTER SYSTEM ARCHITECTURE ---
+        const seal = document.getElementById('env-seal');
+        const flap = document.getElementById('env-flap');
+        const letter = document.getElementById('env-letter');
+        const closeLetterBtn = document.getElementById('close-letter-node');
+
+        seal.addEventListener('click', (e) => {
+            e.stopPropagation();
+            seal.classList.add('broken');
+            setTimeout(() => { flap.classList.add('open'); }, 400);
+            setTimeout(() => { 
+                letter.classList.add('extracted'); 
+                closeLetterBtn.style.display = 'block';
+                showToast("💌 Leyendo carta de Carolay...");
+            }, 1000);
+        });
+
+        closeLetterBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            letter.classList.remove('extracted');
+            closeLetterBtn.style.display = 'none';
+            setTimeout(() => { flap.classList.remove('open'); }, 600);
+            setTimeout(() => { seal.classList.remove('broken'); }, 1200);
+            showToast("Sobre guardado con éxito.");
+        });
+
+        // --- SCROLL INTERACTION REVEAL MANAGEMENT (AOS ENGINE) ---
+        const sections = document.querySelectorAll('.section-card');
+        const observerOptions = { threshold: 0.25 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    if(entry.target.classList.contains('final-letter-card')) {
+                        triggerEpicCelebrationFireworks();
+                    }
+                }
+            });
+        }, observerOptions);
+        sections.forEach(s => observer.observe(s));
+
+        // --- VEHICLES DRIVING & MOTOR EMULATOR TRACK ENGINE ---
+        const fleet = document.getElementById('fleet-fleet');
+        let currentPos = -300;
+        
+        function driveFleetLoop() {
+            currentPos += 1.2;
+            if(currentPos > window.innerWidth) {
+                currentPos = -350;
+            }
+            fleet.style.left = currentPos + "px";
+            requestAnimationFrame(driveFleetLoop);
+        }
+        driveFleetLoop();
+
+        document.getElementById('tractor-unit').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('tractor-light').style.fill = '#fffdf0';
+            showToast("🚜 Tractor Amílcar de alta potencia: ¡Motor encendido y luces activadas!");
+            createExplosion(e.clientX, e.clientY);
+        });
+
+        document.getElementById('truck-unit').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('truck-light').style.fill = '#fffdf0';
+            showToast("🚛 ¡BOCINA DE CAMIÓN PESADO! ¡Honk Honk! Dejando huellas de progreso.");
+            createExplosion(e.clientX, e.clientY);
+        });
+
+        // --- CAKE & BLOW CANDLES CELEBRATION SYSTEM ---
+        document.getElementById('blow-candles-trigger').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const flames = document.querySelectorAll('.candle-flame');
+            flames.forEach(f => f.style.display = 'none');
+            showToast("🎂 ¡Las velas se apagaron! ¡Felicidades Papá Amílcar! 🎉");
+            
+            // Trigger Spectacular Explosion Orchestration
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    createExplosion(Math.random() * window.innerWidth, Math.random() * window.innerHeight * 0.6);
+                }, i * 200);
+            }
+        });
+    </script>
+</body>
+</html>
